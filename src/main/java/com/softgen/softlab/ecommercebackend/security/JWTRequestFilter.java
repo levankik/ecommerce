@@ -8,7 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Configuration;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -20,14 +20,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class JWTRequestFilter extends OncePerRequestFilter {
-    private JWTService jwtService;
-    private LocalUserDAO localUserDAO;
-
-    public JWTRequestFilter(JWTService jwtService, LocalUserDAO localUserDAO) {
-        this.jwtService = jwtService;
-        this.localUserDAO = localUserDAO;
-    }
+    private final JWTService jwtService;
+    private final LocalUserDAO localUserDAO;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

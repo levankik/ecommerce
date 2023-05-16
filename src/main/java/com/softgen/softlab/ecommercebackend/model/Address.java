@@ -14,13 +14,13 @@ public class Address {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "address_lioe_1", nullable = false, length = 512)
+    @Column(name = "address_line_1", nullable = false, length = 512)
     private String addressLine1;
 
-    @Column(name = "address_lioe_2", length = 512)
+    @Column(name = "address_line_2", length = 512)
     private String addressLine2;
 
-    @Column(name = "city", length = 255)
+    @Column(name = "city")
     private String city;
 
     @Column(name = "country", nullable = false, length = 45)

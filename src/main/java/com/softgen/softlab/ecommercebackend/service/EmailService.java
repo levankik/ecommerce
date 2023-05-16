@@ -30,7 +30,7 @@ public class EmailService {
         SimpleMailMessage message = makeMailMessage();
         message.setTo(verificationToken.getUser().getEmail());
         message.setSubject("Verify your email to active your account");
-        message.setText("Please follow the link below to verify your email to active your account.\n +" +
+        message.setText("Please follow the link below to verify your email to active your account.\n" +
                 url + "/auth/verify?token" + verificationToken.getToken());
         try {
             javaMailSender.send(message);

@@ -22,7 +22,7 @@ public class WebOrder {
     private LocalUser user;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "address", nullable = false)
+    @JoinColumn(name = "address_id", nullable = false)
     private LocalUser address;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)

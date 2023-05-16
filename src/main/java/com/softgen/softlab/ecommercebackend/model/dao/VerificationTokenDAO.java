@@ -1,8 +1,13 @@
 package com.softgen.softlab.ecommercebackend.model.dao;
 
+import com.softgen.softlab.ecommercebackend.model.LocalUser;
 import com.softgen.softlab.ecommercebackend.model.VerificationToken;
 import org.springframework.data.repository.ListCrudRepository;
 
-public interface VerificationTokenDAO extends ListCrudRepository<VerificationToken, Long> {
+import java.util.Optional;
 
+
+public interface VerificationTokenDAO extends ListCrudRepository<VerificationToken, Long> {
+    Optional<VerificationToken> findByToken(String token);
+    void deleteByUser(LocalUser user);
 }
