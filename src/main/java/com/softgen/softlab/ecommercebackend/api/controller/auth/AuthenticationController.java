@@ -23,11 +23,11 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity <LocalUser> registerUser(@Valid @RequestBody RegistrationBody registrationBody) {
         try {
-            return ResponseEntity.ok(userService.registerUser(registrationBody)); //.build(); აქ ჩემებურად გადავაკეთე.
+            return ResponseEntity.ok(userService.registerUser(registrationBody));
         } catch (UserAlreadyExistsException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (EmailFailureException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -43,8 +43,10 @@ public class AuthenticationController {
             if (ex.isNewEmailSent()) {
                 reason += "_EMAIL_RESENT";
             }
+            response.setFailureReason(reason);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         } catch (EmailFailureException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         if (jwt == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -57,7 +59,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity verifyEmail(@RequestBody String token) {
+    public ResponseEntity verifyEmail(@RequestParam String token) {
       if (userService.verifyUser(token)) {
           return ResponseEntity.ok().build();
       } else {

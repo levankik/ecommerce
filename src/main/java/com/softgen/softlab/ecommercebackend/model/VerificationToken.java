@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
@@ -18,20 +17,24 @@ public class VerificationToken {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Lob
+    //@Lob
     @Column (name = "token", nullable = false, unique = true)
     private String token;
 
     @Column(name = "created_timestamp", nullable = false)
-    private Timestamp createdTimestamp;
+    private Timestamp createdTimestamp = new Timestamp(System.currentTimeMillis());
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private LocalUser user;
-
-    public Long getId() {return id;}
-
-    public void setId(Long id) {this.id = id;}
+//
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public void setCreatedTimestamp(Timestamp timestamp) {
         this.createdTimestamp = createdTimestamp;
