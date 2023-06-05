@@ -2,8 +2,10 @@ package com.softgen.softlab.ecommercebackend.api.controller.auth;
 
 import com.softgen.softlab.ecommercebackend.api.model.LoginBody;
 import com.softgen.softlab.ecommercebackend.api.model.LoginResponse;
+import com.softgen.softlab.ecommercebackend.api.model.PasswordResetBody;
 import com.softgen.softlab.ecommercebackend.api.model.RegistrationBody;
 import com.softgen.softlab.ecommercebackend.exception.EmailFailureException;
+import com.softgen.softlab.ecommercebackend.exception.EmailNotFoundException;
 import com.softgen.softlab.ecommercebackend.exception.UserAlreadyExistsException;
 import com.softgen.softlab.ecommercebackend.exception.UserNotVerifiedException;
 import com.softgen.softlab.ecommercebackend.model.LocalUser;
@@ -71,4 +73,23 @@ public class AuthenticationController {
     public LocalUser getLoggedInUserProfile(@AuthenticationPrincipal LocalUser user) {
         return user;
     }
+
+    @PostMapping("/forgot")
+    public ResponseEntity forgotPassword(@RequestParam String email) {
+        try {
+            userService.forgotPassword(email);
+            return ResponseEntity.ok().build();
+        }   catch (EmailNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }   catch (EmailFailureException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetBody body) {
+        userService.resetPassword(body);
+        return ResponseEntity.ok().build();
+    }
+
 }

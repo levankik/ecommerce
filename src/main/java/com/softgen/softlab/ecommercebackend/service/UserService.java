@@ -1,8 +1,10 @@
 package com.softgen.softlab.ecommercebackend.service;
 
 import com.softgen.softlab.ecommercebackend.api.model.LoginBody;
+import com.softgen.softlab.ecommercebackend.api.model.PasswordResetBody;
 import com.softgen.softlab.ecommercebackend.api.model.RegistrationBody;
 import com.softgen.softlab.ecommercebackend.exception.EmailFailureException;
+import com.softgen.softlab.ecommercebackend.exception.EmailNotFoundException;
 import com.softgen.softlab.ecommercebackend.exception.UserAlreadyExistsException;
 import com.softgen.softlab.ecommercebackend.exception.UserNotVerifiedException;
 import com.softgen.softlab.ecommercebackend.model.LocalUser;
@@ -93,4 +95,25 @@ public class UserService {
        }
        return false;
     }
+
+    public void forgotPassword(String email) throws EmailNotFoundException, EmailFailureException {
+        Optional<LocalUser> opUser = localUserDAO.findByEmailIgnoreCase(email);
+        if (opUser.isPresent()) {
+            LocalUser user = opUser.get();
+            String token = jwtService.generatePasswordResetJWT(user);
+            emailService.sendPasswordResetEmail(user, token);
+        } else {
+            throw new EmailNotFoundException();
+        }
+    }
+    public void resetPassword (PasswordResetBody body){
+        String email = jwtService.getResetPasswordEmail(body.getToken());
+        Optional<LocalUser> opUser = localUserDAO.findByEmailIgnoreCase(email);
+        if (opUser.isPresent()) {
+            LocalUser user = opUser.get();
+            user.setPassword(encryptionService.encryptPassword(body.getPassword()));
+            localUserDAO.save(user);
+        }
+    }
+
 }
